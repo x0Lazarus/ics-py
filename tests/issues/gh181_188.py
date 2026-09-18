@@ -126,7 +126,7 @@ def test_issue_188_timezone_dropped():
 
     event2 = event1.clone()
     event2.begin = datetime(2014, 1, 1, 0, 0, 0, tzinfo=pacific)
-    ser2 = Calendar(events=[event1]).serialize()
+    ser2 = Calendar(events=[event2]).serialize()
     assert "DTSTART:20140101T000000Z" not in ser2
     assert f"DTSTART;TZID={pacific.tzid}:20140101T000000" in ser2
 

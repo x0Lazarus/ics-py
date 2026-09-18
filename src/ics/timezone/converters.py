@@ -1,5 +1,6 @@
 import datetime
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, Optional, Union, cast
 
 import dateutil
@@ -40,6 +41,21 @@ def Timezone_from_tzid(tzid: str) -> Timezone:
         olson_tzid = ics_vtimezones.windows_to_olson(tzid)
         if olson_tzid:
             tz_ics = ics_vtimezones.find_vtimezone_ics_file(olson_tzid)
+    if not tz_ics:
+        from dateutil.zoneinfo import get_zonefile_instance  # type: ignore[import]
+
+        # Some timezone-data distributions omit alias files. Resolve aliases
+        # using dateutil's bundled zoneinfo, retaining suffix-path lookup for
+        # absolute filenames supplied by dateutil.tz.tzfile on Unix.
+        zones = get_zonefile_instance().zones
+        parts = Path(tzid).parts
+        for index in range(len(parts)):
+            zone = zones.get("/".join(parts[index:]))
+            canonical_tzid = getattr(zone, "_filename", None)
+            if canonical_tzid:
+                tz_ics = ics_vtimezones.find_vtimezone_ics_file(canonical_tzid)
+                if tz_ics:
+                    break
     if not tz_ics:
         raise ValueError(f"no vTimezone.ics file found for {tzid}")
     ics_cal = one(string_to_containers(tz_ics.read_text()))
