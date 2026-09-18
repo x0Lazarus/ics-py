@@ -14,12 +14,15 @@ automatically generated ``UID`` and the timestamps ``created``,
 ``last_modified`` and ``dtstamp``, where the latter defaults to
 ``datetime.now``. As the ``UID``\ s are randomly generated and also even
 two consecutive calls to ``datetime.now()`` usually yield different
-results, the same holds for constructing two events in sequence:
+results, the same holds for constructing two events in sequence.
+Calls can return the same timestamp within the clock's resolution, so the
+timestamp comparison below uses two explicitly different instants:
 
 ::
 
-   >>> from datetime import datetime
-   >>> datetime.now() == datetime.now()
+   >>> from datetime import datetime, timedelta
+   >>> instant = datetime(2022, 6, 6, 12, 0)
+   >>> instant == instant + timedelta(microseconds=1)
    False
    >>> import ics
    >>> e1, e2 = ics.Event(), ics.Event()

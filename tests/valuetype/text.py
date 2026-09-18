@@ -10,7 +10,9 @@ from tests.contentline import VALUE
 
 
 def parse_contentline(line: str) -> ContentLine:
-    (cl,) = Parser.lines_to_contentlines(Parser.string_to_lines(line))
+    (cl,) = Parser.lines_to_contentlines(
+        Parser.unfold_lines(Parser.string_to_lines(line))
+    )
     return cl
 
 
@@ -95,6 +97,7 @@ def test_trailing_escape_value_list():
 @given(value=VALUE)
 @example(value="\\,")
 @example(value="\\\\\\\\,\\\\\\,")
+@example(value="Folded paragraph. " * 10)
 def test_any_text_value_recode(value):
     esc = TextConverter.serialize(value)
     assert TextConverter.parse(esc) == value

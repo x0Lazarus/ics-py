@@ -100,6 +100,8 @@ Exhaustive list
  - `Event.join()`
 
 **Fixed**
+ - Restore test installation and compatible lint/type-check dependencies,
+   deterministic documentation examples, and folded-text round-trip checks
  - Parse and serialize event transparency using the RFC 5545 TRANSP property
  - Fix all-day issues
  - Fix timezone issues

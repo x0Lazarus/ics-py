@@ -44,7 +44,6 @@ test = [
     "hypothesis >= 6",
     "tatsu > 4.2",
     "importlib_resources >= 1.4",
-    "lipsum >= 0.1.2",
     "freezegun >= 1.2.1",
     "setuptools >= 68.2.2",
 ]
@@ -59,6 +58,9 @@ docs = [
 checks = [
     "flake8>=3.8.1",
     "mypy==0.960",
+    # Keep third-party stubs compatible with the pinned mypy version.
+    "types-python-dateutil==2.8.17",
+    "types-pytz==2021.3.8",
 ]
 
 [project.urls]
