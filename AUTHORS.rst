@@ -35,6 +35,7 @@ Other contributors, listed alphabetically, are:
 * `@tomschr <https://github.com/tomschr>`_
 * `@Trii <https://github.com/Trii>`_
 * `@vyper0016 <https://github.com/vyper0016>`_
+* `@x0Lazarus <https://github.com/x0Lazarus>`_
 * `@zagnut007 <https://github.com/zagnut007>`_
 * `@zuphilip <https://github.com/zuphilip>`_
 

@@ -100,6 +100,7 @@ Exhaustive list
  - `Event.join()`
 
 **Fixed**
+ - Parse and serialize event transparency using the RFC 5545 TRANSP property
  - Fix all-day issues
  - Fix timezone issues
  - Fix SEQUENCE bug

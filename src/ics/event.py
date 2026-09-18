@@ -11,6 +11,7 @@ from attr.validators import optional as v_optional
 from ics.alarm import BaseAlarm
 from ics.attendee import Attendee, Organizer
 from ics.component import Component
+from ics.converter.types.event import TransparencyConverter
 from ics.geo import Geo, make_geo
 from ics.timespan import EventTimespan, Timespan
 from ics.timezone import UTC, ensure_utc, now_in_utc
@@ -254,7 +255,9 @@ class EventAttrs(CalendarEntryAttrs):
         default=None, validator=v_optional(instance_of(str))
     )
 
-    transparent: Optional[bool] = attr.ib(default=None)
+    transparent: Optional[bool] = attr.ib(
+        default=None, metadata={"ics_converter": TransparencyConverter}
+    )
     organizer: Optional[Organizer] = attr.ib(
         default=None, validator=v_optional(instance_of(Organizer))
     )
