@@ -23,7 +23,14 @@ class TransparencyConverter(AttributeConverter):
         if value not in ("OPAQUE", "TRANSPARENT"):
             raise ValueError(f"invalid event transparency {item.value!r}")
         params = copy_extra_params(item.params)
-        value_type = params.get("VALUE", ["TEXT"])
+        value_types = [
+            values for name, values in params.items() if name.upper() == "VALUE"
+        ]
+        if len(value_types) > 1:
+            raise ValueError(
+                f"multiple transparency value type definitions {value_types!r}"
+            )
+        value_type = value_types[0] if value_types else ["TEXT"]
         if len(value_type) != 1 or value_type[0].upper() != "TEXT":
             raise ValueError(f"invalid transparency value type {value_type!r}")
         self.set_or_append_value(component, value == "TRANSPARENT")

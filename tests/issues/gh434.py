@@ -68,9 +68,10 @@ def test_update_transparency():
 
 
 @pytest.mark.parametrize("value, expected", [("OPAQUE", False), ("TRANSPARENT", True)])
-def test_transparency_parameters_and_other_values(value, expected):
+@pytest.mark.parametrize("parameter", ["VALUE", "value", "VaLuE"])
+def test_transparency_parameters_and_other_values(value, expected, parameter):
     event = parse_event(
-        f"TRANSP;VALUE=TEXT;X-TEST=retained:{value}",
+        f"TRANSP;{parameter}=tExT;X-TEST=retained:{value}",
         "SUMMARY;VALUE=TEXT:Ordinary text",
         "ATTENDEE;RSVP=TRUE:mailto:guest@example.org",
     )
@@ -78,7 +79,7 @@ def test_transparency_parameters_and_other_values(value, expected):
     assert event.summary == "Ordinary text"
     assert event.attendees[0].rsvp is True
     serialized = event.serialize()
-    assert f"TRANSP;VALUE=TEXT;X-TEST=retained:{value}" in serialized
+    assert f"TRANSP;{parameter}=tExT;X-TEST=retained:{value}" in serialized
     assert "SUMMARY:Ordinary text" in serialized
     assert "RSVP=TRUE" in serialized
     restored = Calendar(Calendar(events=[event]).serialize()).events[0]
@@ -87,9 +88,19 @@ def test_transparency_parameters_and_other_values(value, expected):
 
 
 @pytest.mark.parametrize("value", ["BOOLEAN", "TEXT,BOOLEAN"])
-def test_invalid_transparency_value_type(value):
+@pytest.mark.parametrize("parameter", ["VALUE", "value", "VaLuE"])
+def test_invalid_transparency_value_type(value, parameter):
     with pytest.raises(ValueError, match="transparency value type"):
-        parse_event(f"TRANSP;VALUE={value}:OPAQUE")
+        parse_event(f"TRANSP;{parameter}={value}:OPAQUE")
+
+
+@pytest.mark.parametrize(
+    "parameters",
+    ["VALUE=TEXT;value=TEXT", "VaLuE=TEXT;VALUE=BOOLEAN", "value=BOOLEAN;VaLuE=TEXT"],
+)
+def test_duplicate_transparency_value_type(parameters):
+    with pytest.raises(ValueError, match="transparency value type"):
+        parse_event(f"TRANSP;{parameters}:OPAQUE")
 
 
 @pytest.mark.parametrize("value", [0, 1, "OPAQUE"])
